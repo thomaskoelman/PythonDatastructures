@@ -1,8 +1,8 @@
 def cons(arg1, arg2):
-    return (arg1, arg2)
+    return [arg1, arg2]
 
 def is_pair(pair):
-    return (type(pair) is tuple) and (len(pair) == 2)
+    return (type(pair) is list) and (len(pair) == 2)
 
 def car(pair):
     return pair[0]
