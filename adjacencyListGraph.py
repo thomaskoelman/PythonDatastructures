@@ -49,3 +49,68 @@ class Graph:
             return (to_node in self.__storage[from_node])
         else:
             return (to_node in self.__storage[from_node]) and (from_node in self.__storage[to_node])
+
+    def for_each_node(self, op):
+        for n in self.nodes():
+            op(n)
+
+    def for_each_edge_of_node(self, node, op):
+        for e in self.neighbours(node):
+            op(e)
+
+    def dft(self, root_discovered, node_discovered, node_processed, edge_discovered, edge_processed, edge_bumped,
+            roots=[]):
+        visited = [False] * self.order()
+
+        def has_visited(n):
+            return visited[n]
+
+        def dft_component(root):
+            def expand(from_node, to_node):
+                if (has_visited(to_node)):
+                    if (not edge_bumped(from_node, to_node)):
+                        return False
+                else:
+                    if (not (edge_discovered(from_node, to_node) and dft_rec(to_node) and edge_processed(from_node, to_node))):
+                        return False
+
+            def dft_rec(from_node):
+                if (not node_discovered(from_node)): return False
+                visited[from_node] = True
+                self.for_each_edge_of_node(from_node, (lambda to_node: expand(from_node, to_node)))
+                if (not node_processed(from_node)): return from_node
+            if (not has_visited(root)):
+                if (root_discovered(root)):
+                    dft_rec(root)
+                else:
+                    return False
+
+        if not roots:
+            self.for_each_node(dft_component)
+        else:
+            for root in roots:
+                dft_component(root)
+
+g = Graph(nodes=4)
+g.add_edge(0,1)
+g.add_edge(1,2)
+g.add_edge(1,3)
+def root_discovered(root):
+    print("new root: ", str(root))
+    return True
+def node_discovered(node):
+    print("new node: ", str(node))
+    return True
+def node_processed(node):
+    print("node processed: ", str(node))
+    return True
+def edge_discovered(from_node, to_node):
+    print("edge discovered from ", str(from_node), " to ", str(to_node))
+    return True
+def edge_processed(from_node, to_node):
+    print("edge processed from ", str(from_node), " to ", str(to_node))
+    return True
+def edge_bumped(from_node, to_node):
+    print("edge bumped from ", str(from_node), " to ", str(to_node))
+    return True
+g.dft(root_discovered, node_discovered, node_processed, edge_discovered, edge_processed, edge_bumped)
