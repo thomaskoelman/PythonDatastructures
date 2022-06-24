@@ -1,4 +1,5 @@
 class Graph:
+
     def __init__(self, directed=False, nodes=0):
         self.__is_directed = directed
         self.__storage = []
@@ -91,7 +92,22 @@ class Graph:
             for root in roots:
                 dft_component(root)
 
-g = Graph(nodes=4)
+    def root_nop(self, root):
+        return True
+    def node_nop(self, node):
+        return True
+    def edge_nop(self, from_node, to_node):
+        return True
+
+    def is_connected_component(self):
+        count = 0
+        def incr():
+            nonlocal count
+            count = count + 1
+            return True
+        self.dft(lambda root: incr(), self.node_nop, self.node_nop, self.edge_nop, self.edge_nop, self.edge_nop)
+        return (count == 1)
+
 g.add_edge(0,1)
 g.add_edge(1,2)
 g.add_edge(1,3)
