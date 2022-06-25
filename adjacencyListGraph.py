@@ -1,3 +1,6 @@
+from itertools import combinations
+from random import random
+
 class Graph:
 
     def __init__(self, directed=False, nodes=0):
@@ -107,6 +110,17 @@ class Graph:
             return True
         self.dft(lambda root: incr(), self.node_nop, self.node_nop, self.edge_nop, self.edge_nop, self.edge_nop)
         return (count == 1)
+
+def random_graph(n, p):
+    g = Graph(nodes=n)
+    nodes = g.nodes()
+    for combination in combinations(nodes, 2):
+        a = random()
+        if (a < p):
+            from_node = combination[0]
+            to_node = combination[1]
+            g.add_edge(from_node, to_node)
+    return g
 
 g.add_edge(0,1)
 g.add_edge(1,2)
