@@ -8,14 +8,14 @@ class PQueue:
 
     def enqueue(self, value, priority):
         self.__queue.append((value, priority))
+        self.__queue.sort(reverse=True, key=lambda x: x[1])
 
     def serve(self):
-        self.__queue.sort(key=lambda x: x[1])
-        res = self.__queue[0]
+        pair = self.__queue[0]
         self.__queue = self.__queue[1:]
-        return res
+        return pair[0]
 
     def peek(self):
-        self.__queue.sort(key=lambda x: x[1])
-        return self.__queue[0]
+        pair = self.__queue[0]
+        return pair[0]
 
